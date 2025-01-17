@@ -2,6 +2,7 @@ from typing import Any, Dict, List
 import datetime
 from dataclasses import dataclass
 from collections import namedtuple
+import sqlparse
 import yaml
 from flask import request, Response, jsonify
 from beancount.core.inventory import Inventory  # type: ignore
@@ -74,7 +75,7 @@ class FavaDashboards(FavaExtensionBase):
         try:
             rtypes, rrows = run_query(g.filtered.entries, self.ledger.options, query)
         except Exception as ex:
-            raise FavaAPIError(f"failed to execute query {query}: {ex}") from ex
+            raise FavaAPIError(f"failed to execute query:\n\n{sqlparse.format((query), reindent=True, keyword_case='upper')}\nDue to: {ex}") from ex
 
         # convert to legacy beancount.query format for backwards compat
         result_row = namedtuple("ResultRow", [col.name for col in rtypes])
@@ -173,6 +174,7 @@ class FavaDashboards(FavaExtensionBase):
             "ccy": operating_currencies[0],
             "accounts": accounts,
             "commodities": commodities,
+            "custom": [str(d) for d in self.ledger.all_entries_by_type.Custom]
         }
 
     def bootstrap(self, dashboard_id):

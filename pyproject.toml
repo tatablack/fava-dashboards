@@ -6,12 +6,14 @@ authors = [
     { name = "Andreas Gerstmayr", email = "andreas@gerstmayr.me" }
 ]
 dependencies = [
-    "fava>=1.26.1",
+    "fava>=1.30",
     "pyyaml>=6.0.1",
     "beanquery>=0.1.0",
+    "beancount>=3.0.0",
+    "sqlparse>=0.5.3",
 ]
 readme = "README.md"
-requires-python = ">= 3.8"
+requires-python = ">= 3.9"
 license = {text = "MIT License"}
 
 [project.urls]
