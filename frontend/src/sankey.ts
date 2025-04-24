@@ -135,4 +135,5 @@ export function render_d3sankey(elem, options) {
     })();
 
     elem.replaceChildren(chart);
+    return chart;
 }

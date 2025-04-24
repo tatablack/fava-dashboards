@@ -3,7 +3,10 @@ import * as Panels from "./panels";
 import * as helpers from "./helpers";
 import { urlFor } from "./helpers";
 
-function renderDashboard(ext: any, dashboard: Dashboard, ledger: Ledger, utils: Utils) {
+async function renderDashboard(ext: any, dashboard: Dashboard, ledger: Ledger, utils: Utils) {
+    // Create placeholder for globally accessible dashboards
+    window.FavaDashboards = { panels: [] };
+
     // add Fava filter parameters to panel links
     for (const elem of document.querySelectorAll(".panel a")) {
         const link = elem as HTMLAnchorElement;
@@ -21,17 +24,18 @@ function renderDashboard(ext: any, dashboard: Dashboard, ledger: Ledger, utils: 
 
         const elem = document.getElementById(`panel${i}`) as HTMLDivElement;
         const ctx = { ext, ledger, utils, helpers, panel };
-        Panels[panel.type](ctx, elem);
+        const panelReference = await Panels[panel.type](ctx, elem);
+        window.FavaDashboards.panels.push(panelReference);
     }
 }
 
 export default {
-    onExtensionPageLoad(ext: any) {
+    async onExtensionPageLoad(ext: any) {
         const boostrapJSON = (document.querySelector("#favaDashboardsBootstrap") as HTMLScriptElement)?.text;
         if (!boostrapJSON) return;
 
         const bootstrap: Bootstrap = JSON.parse(boostrapJSON);
         const utils: Utils = new Function(bootstrap.utils)();
-        renderDashboard(ext, bootstrap.dashboard, bootstrap.ledger, utils);
+        await renderDashboard(ext, bootstrap.dashboard, bootstrap.ledger, utils);
     },
 };

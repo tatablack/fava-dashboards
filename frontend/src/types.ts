@@ -1,5 +1,13 @@
 import * as helpers from "./helpers";
 
+declare global {
+    interface Window {
+        FavaDashboards: {
+            panels: any[];
+        };
+    }
+}
+
 export interface Bootstrap {
     dashboard: Dashboard;
     ledger: Ledger;

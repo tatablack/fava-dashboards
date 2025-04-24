@@ -1,6 +1,6 @@
 import * as echartslib from "echarts";
-import { render_d3sankey } from "./sankey";
-import { PanelCtx } from "./types";
+import {render_d3sankey} from "./sankey";
+import {PanelCtx} from "./types";
 
 function runFunction(src: string, args: Record<string, any>): Promise<any> {
     const AsyncFunction = async function () {}.constructor;
@@ -26,6 +26,8 @@ export async function html(ctx: PanelCtx, elem: HTMLDivElement) {
     } catch (e) {
         elem.innerHTML = e;
     }
+
+    return elem;
 }
 
 export async function echarts(ctx: PanelCtx, elem: HTMLDivElement) {
@@ -53,6 +55,8 @@ export async function echarts(ctx: PanelCtx, elem: HTMLDivElement) {
         options.backgroundColor = "transparent";
     }
     chart.setOption(options);
+
+    return chart;
 }
 
 export async function d3_sankey(ctx: PanelCtx, elem: HTMLDivElement) {
@@ -64,9 +68,10 @@ export async function d3_sankey(ctx: PanelCtx, elem: HTMLDivElement) {
         return;
     }
 
-    render_d3sankey(elem, options);
+    return render_d3sankey(elem, options);
 }
 
 export async function jinja2(ctx: PanelCtx, elem: HTMLDivElement) {
     elem.innerHTML = ctx.panel.template ?? "";
+    return elem;
 }
